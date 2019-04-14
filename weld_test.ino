@@ -1,4 +1,4 @@
-// Simple spot welder timer with zero crossing detection and LCD
+// Simple spot welder timer with zero crossing detection and Velleman LCD shield VMA203
 // inspiration  about zero crossing from here https://www.avdweb.nl/popular/spotwelder
 // Andrejs Pukitis 2019.14.04
 
@@ -43,12 +43,12 @@ int read_LCD_buttons()
 
 void setup() {
 
-// setup screen
-  lcd.begin(12, 2);                
-  lcd.setCursor(2, 0);             
-  lcd.print(" SPOT WELD");      
-  lcd.setCursor(2, 1);             
-  lcd.print("    B151    ");       
+  // setup screen
+  lcd.begin(12, 2);
+  lcd.setCursor(2, 0);
+  lcd.print(" SPOT WELD");
+  lcd.setCursor(2, 1);
+  lcd.print("    B151    ");
   delay(3000);
   lcd.clear();
   lcd.setCursor(0, 0);
@@ -70,7 +70,7 @@ void fire() {
 }
 void sinusMax()
 {
-                                       //to prevent inrush current, turn-on at the sinus max
+  //to prevent inrush current, turn-on at the sinus max
   while (digitalRead(zeroCrossPin)); //AC sinus is above zero do nothing
   while (!digitalRead(zeroCrossPin)); //AC sinus is below zero do nothing
   delayMicroseconds(sinusMax_eu); // just crossed zero at beginning of sinus wait until max
@@ -122,44 +122,44 @@ void loop()
 
   switch (lcd_key)               // depending on which button was pushed, we perform an action
   {
-    case btnRIGHT:{
-      
-      sec += 1;
-      delay(250);
-      break;
+    case btnRIGHT: {
+
+        sec += 1;
+        delay(250);
+        break;
+      }
+    case btnLEFT: {
+
+        sec -= 1;
+        delay(250);
+        break;
+      }
+    case btnUP: {
+
+        rep += 1;
+        delay(250);
+        break;
+      }
+    case btnDOWN: {
+
+
+        rep -= 1;
+        delay(250);
+        break;
+      }
+    case btnSELECT: {
+
+        lcd.setCursor(11, 1);
+        lcd.print("WELD!");
+        delay(350);
+        lcd.setCursor(11, 1);
+        lcd.print("     ");
+        fire();
+        break;
+      }
+    case btnNONE: {
+        break;
+      }
   }
-case btnLEFT:{
- 
-  sec -= 1;
-  delay(250);
-  break;
-}
-case btnUP:{
-
-rep += 1;
-delay(250);
-break;
-}
-case btnDOWN:{
-
-
-rep -= 1;
-delay(250);
-break;
-}
-case btnSELECT:{
-
-lcd.setCursor(11, 1);
-      lcd.print("WELD!");
-  delay(350);
- lcd.setCursor(11, 1);
-      lcd.print("     ");     
-fire();
-break;
-}
-case btnNONE:{
-break;
-}
-}
 }
 
