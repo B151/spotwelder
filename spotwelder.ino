@@ -63,7 +63,7 @@ void setup() {
 void fire() {
 
   for (int i = 1; i <= rep; i++) {
-   //sinusMax(); //wait for zero crossing
+  sinusMax(); //wait for zero crossing
     digitalWrite(bta, HIGH);
     delay (sec);
     digitalWrite(bta, LOW);
