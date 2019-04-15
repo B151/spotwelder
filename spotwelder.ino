@@ -1,20 +1,20 @@
-// Simple spot welder timer with zero crossing detection and Velleman LCD shield VMA203
+// Simple spot welder timer with zero crossing detection and Velleman LCD shield VMA203 https://www.velleman.eu/downloads/29/infosheets/vma203_scheme.pdf
 // inspiration  about zero crossing from here https://www.avdweb.nl/popular/spotwelder
 // Andrejs Pukitis 2019.14.04
 
 #include <LiquidCrystal.h>
 
-int bta = 13;      //optotriac
+const int bta = 12;      //optotriac
 int lcd_key     = 0;
 int adc_key_in  = 0; //analog in for buttons
-
+const int sinusMax_eu = 5000; //1000ms divided by 50Hz divided by 4SinusPeriods equals 5000us
+const byte zeroCrossPin = 11;   // input AC signal for zero crossing
 
 int lastReportedPos = 1;
 int lastReportedPos2 = 1;
-volatile  int sec = 20; //delay in mS
+volatile  int sec = 40; //delay in mS
 volatile  int rep = 0; //repeat times
-const int sinusMax_eu = 5000; //1000ms divided by 50Hz divided by 4SinusPeriods equals 5000us
-const byte zeroCrossPin = A1;   // input AC signal for zero crossing
+
 
 // define some values used by the panel and buttons
 
@@ -24,6 +24,7 @@ const byte zeroCrossPin = A1;   // input AC signal for zero crossing
 #define btnLEFT   3
 #define btnSELECT 4
 #define btnNONE   5
+
 
 LiquidCrystal lcd(8, 9, 4, 5, 6, 7);
 
@@ -44,22 +45,25 @@ int read_LCD_buttons()
 void setup() {
 
   // setup screen
-  lcd.begin(12, 2);
+  lcd.begin(16, 2);
   lcd.setCursor(2, 0);
-  lcd.print(" SPOT WELD");
+  lcd.print("SPOT WELDER");
   lcd.setCursor(2, 1);
   lcd.print("    B151    ");
   delay(3000);
   lcd.clear();
   lcd.setCursor(0, 0);
-  lcd.print("Delay:     mS");
+  lcd.print("Pulse:    mS");
   lcd.setCursor(0, 1);
   lcd.print("Repeat:   ");
+  
+  pinMode(bta, OUTPUT);
+  pinMode(zeroCrossPin, INPUT);
 }
 void fire() {
 
   for (int i = 1; i <= rep; i++) {
-    //sinusMax(); //wait for zero crossing
+   //sinusMax(); //wait for zero crossing
     digitalWrite(bta, HIGH);
     delay (sec);
     digitalWrite(bta, LOW);
